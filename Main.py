@@ -10,8 +10,8 @@ CHANNEL_USERNAME = "@pereprodajaoling_soting"
 
 # Kino bazasi (Kino kodi va uning Telegram video ID raqami)
 MOVIES = {
-    "1": "BAACAgIAAxkBAAIB...",  # 1-kino uchun video file_id
-    "2": "BAACAgIAAxkBAAIB...",  # 2-kino uchun video file_id
+    "1": "BAACAgIAAxkBAAIB...",  # 1-kino uchun file_id
+    "2": "BAACAgIAAxkBAAIB...",  # 2-kino uchun file_id
 }
 
 # Botni sozlash
@@ -26,7 +26,13 @@ async def start_command(message: types.Message):
         f"Kino kodini yuboring va kinoni tomosha qiling!"
     )
 
-# Kino kodini qabul qilish va video yuborish
+# Botga video tashlasangiz, uning haqiqiy file_id sini chiqarib beradi
+@dp.message(F.video)
+async def get_video_id(message: types.Message):
+    file_id = message.video.file_id
+    await message.answer(f"Bu kinoning file_id si:\n\n`{file_id}`", parse_mode="Markdown")
+
+# Raqam yuborganda kinoni topib berish
 @dp.message(F.text)
 async def send_movie(message: types.Message):
     code = message.text.strip()
@@ -38,7 +44,7 @@ async def send_movie(message: types.Message):
             caption=f"🎬 Siz so'ragan kino! Kanalimiz: {CHANNEL_USERNAME}"
         )
     else:
-        await message.answer("❌ Bunday kodli kino topilmadi. Iltimos, to'g'ri kod yuboring.")
+        await message.answer("❌ Bunday kodli kino topilmadi.")
 
 # Botni ishga tushirish
 async def main():
@@ -48,3 +54,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
